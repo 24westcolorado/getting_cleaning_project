@@ -24,7 +24,79 @@ This next part of the code performs the following steps:
 * Set the standard deviation names, and 
 * Put the variable names together.
 
-We determine the variable names by splitting the given field name into substrings using "-" as a delimiter.  We also expand t to Time and f to Freq for frequency. 
+We determine the variable names by splitting the given field name into substrings using "-" as a delimiter.  We also expand t to Time and f to Freq for frequency.
+
+The variable names are given by the following:
+
+* [1] "Subjects"                   
+* [2] "Activities"                 
+* [3] "MeanTimeBodyAccX"           
+* [4] "MeanTimeBodyAccY"           
+* [5] "MeanTimeBodyAccZ"           
+* [6] "MeanTimeGravityAccX"        
+* [7] "MeanTimeGravityAccY"        
+* [8] "MeanTimeGravityAccZ"        
+* [9] "MeanTimeBodyAccJerkX"       
+* [10] "MeanTimeBodyAccJerkY"       
+* [11] "MeanTimeBodyAccJerkZ"       
+* [12] "MeanTimeBodyGyroX"          
+* [13] "MeanTimeBodyGyroY"          
+* [14] "MeanTimeBodyGyroZ"          
+* [15] "MeanTimeBodyGyroJerkX"      
+* [16] "MeanTimeBodyGyroJerkY"      
+* [17] "MeanTimeBodyGyroJerkZ"      
+* [18] "MeanTimeBodyAccMag"         
+* [19] "MeanTimeGravityAccMag"      
+* [20] "MeanTimeBodyAccJerkMag"     
+* [21] "MeanTimeBodyGyroMag"        
+* [22] "MeanTimeBodyGyroJerkMag"    
+* [23] "MeanFreqBodyAccX"           
+* [24] "MeanFreqBodyAccY"           
+* [25] "MeanFreqBodyAccZ"           
+* [26] "MeanFreqBodyAccJerkX"       
+* [27] "MeanFreqBodyAccJerkY"       
+* [28] "MeanFreqBodyAccJerkZ"       
+* [29] "MeanFreqBodyGyroX"          
+* [30] "MeanFreqBodyGyroY"          
+* [31] "MeanFreqBodyGyroZ"          
+* [32] "MeanFreqBodyAccMag"         
+* [33] "MeanFreqBodyBodyAccJerkMag" 
+* [34] "MeanFreqBodyBodyGyroMag"    
+* [35] "MeanFreqBodyBodyGyroJerkMag"
+* [36] "StdTimeBodyAccX"            
+* [37] "StdTimeBodyAccY"            
+* [38] "StdTimeBodyAccZ"            
+* [39] "StdTimeGravityAccX"         
+* [40] "StdTimeGravityAccY"         
+* [41] "StdTimeGravityAccZ"         
+* [42] "StdTimeBodyAccJerkX"        
+* [43] "StdTimeBodyAccJerkY"        
+* [44] "StdTimeBodyAccJerkZ"        
+* [45] "StdTimeBodyGyroX"           
+* [46] "StdTimeBodyGyroY"           
+* [47] "StdTimeBodyGyroZ"           
+* [48] "StdTimeBodyGyroJerkX"       
+* [49] "StdTimeBodyGyroJerkY"       
+* [50] "StdTimeBodyGyroJerkZ"       
+* [51] "StdTimeBodyAccMag"          
+* [52] "StdTimeGravityAccMag"       
+* [53] "StdTimeBodyAccJerkMag"      
+* [54] "StdTimeBodyGyroMag"         
+* [55] "StdTimeBodyGyroJerkMag"     
+* [56] "StdFreqBodyAccX"            
+* [57] "StdFreqBodyAccY"            
+* [58] "StdFreqBodyAccZ"            
+* [59] "StdFreqBodyAccJerkX"        
+* [60] "StdFreqBodyAccJerkY"        
+* [61] "StdFreqBodyAccJerkZ"        
+* [62] "StdFreqBodyGyroX"           
+* [63] "StdFreqBodyGyroY"           
+* [64] "StdFreqBodyGyroZ"           
+* [65] "StdFreqBodyAccMag"          
+* [66] "StdFreqBodyBodyAccJerkMag"  
+* [67] "StdFreqBodyBodyGyroMag"     
+* [68] "StdFreqBodyBodyGyroJerkMag" 
+
 
 ## 2. Extracts only the measurements on the mean and standard deviation
 
@@ -42,28 +114,12 @@ The activity flags are replaced with the active names found in part 3.  The code
 
 ## 5. Create a tidy data set
 
-second, independent tidy data set with the average of each variable for each activity and each subject. 
-# 
-unq_sbjs <- sort(unique(data$Subjects))
-unq_acts <- sort(unique(data$Activities))
-dat_tidy <- as.data.frame(data[1:(length(unq_sbjs)*length(unq_acts)),])
-for (i in unq_sbjs)
-{
-  for (j in 1:length(unq_acts))
-  {
-    n <- (i-1)*length(unq_acts) + j
-    print(n)
-    ids    <- ( (data$Subjects==unq_sbjs[i]) &
-                (data$Activities==unq_acts[j]) )
-    tmpdat <- as.data.frame(data[ids,])
-    tmpvec <- colMeans(tmpdat[,3:ncol(tmpdat)])
-    
-    dat_tidy[n,1] <- unq_sbjs[i]
-    dat_tidy[n,2] <- unq_acts[j]
-    dat_tidy[n,3:ncol(tmpdat)] <- tmpvec
-  }
-}
+In this step the code constructs a tidy data set from the previous data set just created.  The first two columns of the tidy data set are the Subjects and the Activities.  The following columns are the average values of the variables over each each activity and each subject. 
 
-write.csv(dat_tidy,file = "tidy_data.txt")
+The performs the following steps:
 
+* Find the unique Subjects and Activities
+* Loop through the Subjects and Activities
+* For each pair the code finds the corresponding rows,  then calculates the means for all the variables, and records the data
 
+After the loop is completed the data is written to a txt file, in a csv format, called tidy_data.txt.
